@@ -52,8 +52,18 @@ async function start(client: wppconnect.Whatsapp): Promise<void> {
       if (
         message.type === 'chat' &&
         !message.isGroupMsg &&
-        message.chatId !== 'status@broadcast'
+        message.chatId !== 'status@broadcast' &&
+        typeof message.body === 'string'
       ) {
+        const blacklist = ['atendente, finalizar atendimento'];
+        const isBlocked = blacklist.some(palavra =>
+          message.body!.toLowerCase().includes(palavra.toLowerCase())
+        );
+        if (isBlocked) {
+          console.log(`🔕 Mensagem bloqueada por palavra-chave: "${message.body}"`);
+          return;
+        }
+
         const chatId: string =
           typeof message.chatId === 'string'
             ? message.chatId
