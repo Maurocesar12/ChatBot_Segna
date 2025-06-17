@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import { initializeNewAIChatSession, mainOpenAI } from './service/openai';
 import { splitMessages, sendMessagesWithDelay } from './util';
 import { mainGoogle } from './service/google';
+import { detectarSetor, transferirParaSetor } from './service/router';
 
 dotenv.config();
 type AIOption = 'GPT' | 'GEMINI';
@@ -48,31 +49,40 @@ wppconnect
 
 async function start(client: wppconnect.Whatsapp): Promise<void> {
   client.onMessage((message) => {
-    (async () => {
+    (async () => {  
       if (
         message.type === 'chat' &&
         !message.isGroupMsg &&
         message.chatId !== 'status@broadcast' &&
         typeof message.body === 'string'
       ) {
-        const blacklist = ['atendente, finalizar atendimento'];
+          const chatId: string =
+          typeof message.chatId === 'string'
+            ? message.chatId
+            : message.chatId._serialized;
+
+        const blacklist = ['atendente, cancelar'];
         const isBlocked = blacklist.some(palavra =>
           message.body!.toLowerCase().includes(palavra.toLowerCase())
         );
         if (isBlocked) {
           console.log(`🔕 Mensagem bloqueada por palavra-chave: "${message.body}"`);
           return;
-        }
+        };
 
-        const chatId: string =
-          typeof message.chatId === 'string'
-            ? message.chatId
-            : message.chatId._serialized;
+        // NOVO: Verificar e transferir para setor no Digisac
+        const departmentId = detectarSetor(message.body);
+        if (departmentId) {
+          await transferirParaSetor(chatId, departmentId, message.body);
+          console.log(`🔁 Mensagem direcionada ao setor ${departmentId} via Digisac.`);
+          return;
+      }
+
 
         console.log('Mensagem recebida:', message.body);
         if (AI_SELECTED === 'GPT') {
           await initializeNewAIChatSession(chatId);
-        }
+        };
 
         if (!messageBufferPerChatId.has(chatId)) {
           messageBufferPerChatId.set(chatId, [message.body]);
@@ -81,11 +91,11 @@ async function start(client: wppconnect.Whatsapp): Promise<void> {
             ...messageBufferPerChatId.get(chatId),
             message.body,
           ]);
-        }
+        };
 
         if (messageTimeouts.has(chatId)) {
           clearTimeout(messageTimeouts.get(chatId));
-        }
+        };
         console.log('Aguardando novas mensagens...');
         messageTimeouts.set(
           chatId,
