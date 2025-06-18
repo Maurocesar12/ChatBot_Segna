@@ -4,6 +4,10 @@ import { initializeNewAIChatSession, mainOpenAI } from './service/openai';
 import { splitMessages, sendMessagesWithDelay } from './util';
 import { mainGoogle } from './service/google';
 import { detectarSetor, transferirParaSetor } from './service/router';
+import { connectDB } from './config/db';
+import { buscarClientePorCPF } from './service/clienteService';
+connectDB();
+
 
 dotenv.config();
 type AIOption = 'GPT' | 'GEMINI';
@@ -80,6 +84,23 @@ async function start(client: wppconnect.Whatsapp): Promise<void> {
 
 
         console.log('Mensagem recebida:', message.body);
+        // 🔎 NOVO: Tratamento de CPF antes da IA
+          const cpf = message.body.replace(/\D/g, '');
+          if (cpf.length === 11) {
+            const cliente = await buscarClientePorCPF(cpf);
+
+            if (!cliente) {
+              await client.sendText(message.from, `❌ CPF ${cpf} não encontrado.`);
+            } else {
+              const resposta = `✅ Olá, ${cliente.nome}! Encontramos seus dados:\n\n` + cliente.seguros.map((seguro) => 
+            `📌 Tipo: ${seguro.tipo ?? 'Não informado'}\n📄 Apólice: ${seguro.apolice ?? 'Não informado'}\n📆 Vigência: ${seguro.vigencia ?? 'Não informado'}\n🔐 Status: ${seguro.status ?? 'Não informado'}`
+          ).join('\n\n');
+
+              await client.sendText(message.from, resposta);
+            }
+
+            return; // <-- evita que a mensagem vá para IA depois disso
+          }
         if (AI_SELECTED === 'GPT') {
           await initializeNewAIChatSession(chatId);
         };
