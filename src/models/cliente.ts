@@ -13,4 +13,4 @@ const clienteSchema = new Schema({
   ]
 });
 
-export const Cliente = model('Cliente', clienteSchema);
+export const Cliente = model('Cliente', clienteSchema, 'Clientes');
