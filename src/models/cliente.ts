@@ -1,14 +1,15 @@
 import { Schema, model } from 'mongoose';
 
 const clienteSchema = new Schema({
-  cpf: { type: String, required: true, unique: true },
+  cpf_cnpj: { type: String, required: true, unique: true },
   nome: String,
   seguros: [
     {
-      tipo: String,
       apolice: String,
-      vigencia: String,
-      status: String
+      produto: String,
+      seguradora: String,
+      vigencia_inicio: String,
+      vigencia_final: String
     }
   ]
 });

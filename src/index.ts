@@ -5,7 +5,7 @@ import { splitMessages, sendMessagesWithDelay } from './util';
 import { mainGoogle } from './service/google';
 import { detectarSetor, transferirParaSetor } from './service/router';
 import { connectDB } from './config/db';
-import { buscarClientePorCNPJ, buscarClientePorCPF } from './service/clienteService';
+import { buscarClientePorDocumento} from './service/clienteService';
 connectDB();
 
 
@@ -84,39 +84,24 @@ async function start(client: wppconnect.Whatsapp): Promise<void> {
 
 
         console.log('Mensagem recebida:', message.body);
-        // 🔎 NOVO: Tratamento de CPF antes da IA
-          const documento = message.body.replace(/\D/g, '');
-      // CPF
-          if (documento.length === 11) {
-            const cliente = await buscarClientePorCPF(documento);
+        // 🔎 Tratamento de CPF ou CNPJ antes da IA
+        const documento = message.body.trim().replace(/\D/g, '');
 
-            if (!cliente) {
-              await client.sendText(message.from, `❌ CPF ${documento} não encontrado.`);
-            } else {
-              const resposta = `✅ Olá, ${cliente.nome}! Encontramos seus dados:\n\n` + cliente.seguros.map((seguro) => 
-            `📌 Tipo: ${seguro.tipo ?? 'Não informado'}\n📄 Apólice: ${seguro.apolice ?? 'Não informado'}\n📆 Vigência: ${seguro.vigencia ?? 'Não informado'}\n🔐 Status: ${seguro.status ?? 'Não informado'}`
-          ).join('\n\n');
+        if (documento.length === 11 || documento.length === 15) {
+          const cliente = await buscarClientePorDocumento(documento);
 
-              await client.sendText(message.from, resposta);
-            }
+          if (!cliente) {
+            await client.sendText(message.from, `❌ Documento ${documento} não encontrado.`);
+          } else {
+            const resposta = `✅ Olá, ${cliente.nome}! Encontramos os dados:\n\n` + cliente.seguros.map((seguro) => 
+              `📌 Seguradora: ${seguro.seguradora ?? 'Não informado'}\n📄 Apólice: ${seguro.apolice ?? 'Não informado'}\n📆 Vigência-Inicio: ${seguro.vigencia_inicio ?? 'Não informado'}\n🔐 Vigencia-Final: ${seguro.vigencia_final ?? 'Não informado'}`
+            ).join('\n\n');
 
-            return; // <-- evita que a mensagem vá para IA depois disso
+            await client.sendText(message.from, resposta);
           }
-          // CNPJ
-          if(documento.length === 14){
-            const cliente = await buscarClientePorCNPJ(documento);
 
-            if(!cliente){
-              await client.sendText(message.from, `❌ CNPJ ${documento} não encontrado.`);
-            }else{
-              const resposta = `✅ Olá, ${cliente.nome}! Encontramos seus dados:\n\n` + cliente.seguros.map((seguro) => 
-            `📌 Tipo: ${seguro.tipo ?? 'Não informado'}\n📄 Apólice: ${seguro.apolice ?? 'Não informado'}\n📆 Vigência: ${seguro.vigencia ?? 'Não informado'}\n🔐 Status: ${seguro.status ?? 'Não informado'}`
-          ).join('\n\n');
-
-              await client.sendText(message.from, resposta);
-          };
-          return; // Evita o encaminhamento para a IA
-};
+          return; // Evita encaminhar para IA
+        }
             
         if (AI_SELECTED === 'GPT') {
           await initializeNewAIChatSession(chatId);
