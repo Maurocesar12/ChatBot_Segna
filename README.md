@@ -1,37 +1,79 @@
-# Zap-GPT
+# 🤖 ChatBot Segna (Zap-GPT)
 
-Este projeto explora a integração do ChatGPT com o WhatsApp, transformando o chatbot em um assistente virtual capaz de realizar tarefas como falar com amigos, responder a perguntas de clientes, e muito mais, com um toque de humanização nas conversas.
+Este projeto implementa um assistente virtual inteligente que integra o WhatsApp à inteligência artificial da OpenAI (ChatGPT) e Gemini, oferecendo interações humanizadas e automáticas para diversos casos de uso, como atendimento ao cliente, suporte técnico ou ações de marketing.
 
-## 📚 Como funciona
+---
 
-A integração começa com o [wpconnect](https://github.com/wppconnect-team/wppconnect), que estabelece a conexão com o WhatsApp. <br/>
-As mensagens recebidas são então processadas pela API do ChatGPT ou Gemini, que gera respostas coerentes e personalizadas.<br/>
-Utilizamos um [assistant](https://platform.openai.com/docs/assistants/overview) da OpenAI, que é um do modelo OpenAI que foi pré-configurado com prompts detalhados. </br>
-No caso do Gemini usamos um prompt pronto para instruções do modelo. </br>
-Esses prompts orientam o assistente sobre como responder de maneira coerente e personalizada, assegurando que as interações não só se mantenham relevantes e engajantes, mas também reflitam uma abordagem humana e natural na conversação.
+## 🚀 Funcionalidades
 
-## 🚀 Como rodar o projeto
-[Vídeo mostrando como rodar](https://youtu.be/Sh94c6yn5aQ)
+- Integração com o WhatsApp via [WPPConnect](https://github.com/wppconnect-team/wppconnect);
+- Respostas automáticas com base na API da OpenAI (assistants ou completions);
+- Compatível com o modelo Gemini (Google Generative AI);
+- Suporte a múltiplos usuários e autenticação via chave secreta;
+- Banco de dados MongoDB para persistência de dados;
+- Modularidade para diferentes estratégias de prompts;
+- CLI para configuração interativa;
+- Suporte completo a Typescript.
 
-## 🧪 Informações
+---
 
-Você pode testar o zap-gpt que está ativo neste [WhatsApp](https://wa.me/5551981995600)  </br>
-Confira mais detalhes do projeto no meu [Instagram](https://www.instagram.com/marcusdev_)
+## 🛠️ Tecnologias Utilizadas
 
-## 🎉 Zap GPT Client
+- **Node.js 18+**
+- **Typescript**
+- **OpenAI SDK**
+- **Google Generative AI SDK**
+- **WPPConnect**
+- **MongoDB + Mongoose**
+- **dotenv**
+- **PM2** para orquestração de processos
+- **Tsup + TSX** para build e dev
+- **Prettier + ESLint** para padronização
 
-O **Zap-GPT-Client** é uma versão aprimorada do Zap-GPT em formato executável com interface, oferecendo mais funcionalidades extras e maior performance. Diferente de seu antecessor, ele não utiliza o wppconnect, corrigindo diversos bugs e problemas.
+---
 
-### Funcionalidades Diferenciais
-- 🗣️ **Entendimento de Áudio e Imagem:** Agora a IA pode entender e responder a mensagens de áudio e imagem.
-- ⏸️ **Controle de Conversas:** É possível parar a IA em conversas específicas.
-- 🎯 **Respostas Personalizadas:** Você pode escolher quem a IA deve ou não responder.
-- 🔒 **Atualizações de Segurança:** Todas as atualizações de segurança mais recentes estão incluídas.
-- ⌨️ **Simulação de Digitação:** Para uma experiência mais humana, a IA simula a digitação.
-- 🖥️ **Interface Intuitiva:** Uma interface amigável permite configurar facilmente todas as funcionalidades.
-- 🔗 **Conexão de Múltiplas Contas:** Conecte e gerencie várias contas de WhatsApp no mesmo cliente, sem custo adicional por número.
+## ⚙️ Instalação
 
-Com o **Zap-GPT-Client**, você tem mais controle, segurança e eficiência! 🚀
+```bash
+# Clone o repositório
+git clone https://github.com/seu-usuario/ChatBot_Segna.git
+cd ChatBot_Segna
 
-Adquira agora [clicando aqui!](https://www.ozapgpt.com.br/) </br>
-Tire suas dúvidas via [WhatsApp](https://wa.me/5551981995600)  </br>
+# Instale as dependências
+npm install
+
+# Copie e edite as variáveis de ambiente
+cp .env.example .env
+```
+--
+##Precisa configurar o .env
+--
+##▶️ Execução
+
+# Ambiente de desenvolvimento (hot reload)
+npm run dev
+
+# Compilar para produção
+npm run build
+
+# Iniciar em modo produção com PM2
+npm run start
+
+# Parar o serviço
+npm run stop
+
+##🧠 Configuração do Assistente
+Na primeira execução, você pode configurar os prompts, chaves das APIs e integração com o WhatsApp com o comando:
+
+-> npm run config
+
+src/
+├── index.ts            # Ponto de entrada
+├── config/             # Configurações e variáveis
+├── services/           # Lógicas de negócio (ChatGPT, Gemini, WhatsApp, etc)
+├── models/             # Schemas do Mongoose
+├── utils/              # Utilitários auxiliares
+└── prompts/            # Prompts personalizados
+
+👨‍💻 Autor
+Desenvolvido por Mauro César Guimarães Santos Junior
