@@ -47,6 +47,7 @@ async function criarConversaTemporaria(numero: string, texto: string): Promise<b
   const token = process.env.DIGISAC_TOKEN;
   const serviceId = process.env.DIGISAC_CONNECTION_ID;
   const userId = process.env.DIGISAC_USER_ID;
+  const departamentoId = process.env.DIGISAC_DEPARTMENT_ID;
 
   try {
     const payload = {
@@ -55,7 +56,8 @@ async function criarConversaTemporaria(numero: string, texto: string): Promise<b
       serviceId,
       number: numero,
       userId,
-      origin: "bot"
+      origin: "bot",
+      departmentId: departamentoId
     };
 
     const response = await axios.post(`${baseUrl}/messages`, payload, {
