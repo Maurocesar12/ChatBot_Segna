@@ -65,8 +65,9 @@ npm run stop
 ##🧠 Configuração do Assistente
 Na primeira execução, você pode configurar os prompts, chaves das APIs e integração com o WhatsApp com o comando:
 
--> npm run config
+npm run config
 
+```
 src/
 ├── index.ts            # Ponto de entrada
 ├── config/             # Configurações e variáveis
@@ -74,6 +75,8 @@ src/
 ├── models/             # Schemas do Mongoose
 ├── utils/              # Utilitários auxiliares
 └── prompts/            # Prompts personalizados
+```
+---
 
 👨‍💻 Autor
 Desenvolvido por Mauro César Guimarães Santos Junior
