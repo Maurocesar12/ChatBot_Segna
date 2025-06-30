@@ -94,7 +94,7 @@ async function start(client: wppconnect.Whatsapp): Promise<void> {
             await client.sendText(message.from, `❌ Documento ${documento} não encontrado.`);
           } else {
             const resposta = `✅ Olá, ${cliente.nome}! Encontramos os dados:\n\n` + cliente.seguros.map((seguro) => 
-              `📌 Seguradora: ${seguro.seguradora ?? 'Não informado'}\n📄 Apólice: ${seguro.apolice ?? 'Não informado'}\n📆 Vigência-Inicio: ${seguro.vigencia_inicio ?? 'Não informado'}\n🔐 Vigencia-Final: ${seguro.vigencia_final ?? 'Não informado'}`
+              `😁Tipo de seguro: ${seguro.produto ?? 'não informado'}\n 📌 Seguradora: ${seguro.seguradora ?? 'Não informado'}\n📄 Apólice: ${seguro.apolice ?? 'Não informado'}\n📆 Vigência Inicio: ${seguro.vigencia_inicio ?? 'Não informado'}\n🔐 Vigencia Final: ${seguro.vigencia_final ?? 'Não informado'}`
             ).join('\n\n');
 
             await client.sendText(message.from, resposta);

@@ -56,7 +56,7 @@ async function criarConversaTemporaria(numero: string, texto: string): Promise<b
       serviceId,
       number: numero,
       userId,
-      origin: "bot",
+      origin: "user",
       departmentId: departamentoId
     };
 
