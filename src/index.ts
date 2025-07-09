@@ -160,7 +160,7 @@ async function start(client: wppconnect.Whatsapp): Promise<void> {
               messageBufferPerChatId.delete(chatId);
               messageTimeouts.delete(chatId);
             })();
-          }, 15000)
+          }, 5000)
         );
       }
     })();
