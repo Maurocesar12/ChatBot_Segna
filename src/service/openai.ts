@@ -75,18 +75,33 @@ async function checkRunStatus({
   threadId: string;
   runId: string;
 }): Promise<any> {
-  return await new Promise((resolve, _reject) => {
-    const verify = async (): Promise<void> => {
-      const runStatus = await openai.beta.threads.runs.retrieve(runId, {
-        thread_id: threadId,
-      });
+  return await new Promise((resolve, reject) => {
+    const startTime = Date.now();
+    const TIMEOUT_LIMIT = 15000; // 15 segundos
 
-      if (runStatus.status === 'completed') {
-        const messages = await openai.beta.threads.messages.list(threadId);
-        resolve(messages);
-      } else {
-        console.log('⏳ Aguardando resposta da OpenAI...');
-        setTimeout(verify, 3000);
+    const verify = async (): Promise<void> => {
+      const elapsed = Date.now() - startTime;
+      console.log(`⏳ Verificando status após ${elapsed / 1000}s`);
+
+      if (elapsed > TIMEOUT_LIMIT) {
+        console.error('⛔ Tempo limite excedido para resposta da OpenAI.');
+        reject(new Error('Tempo limite excedido para resposta da IA.')); return;
+      }
+
+      try {
+        const runStatus = await openai.beta.threads.runs.retrieve(runId, {
+          thread_id: threadId,
+        });
+
+        if (runStatus.status === 'completed') {
+          const messages = await openai.beta.threads.messages.list(threadId);
+          resolve(messages); 
+        } else {
+          setTimeout(verify, 1000); // 1 segundo entre verificações
+        }
+      } catch (err) {
+        console.error('❌ Erro ao verificar status do run:', err);
+        reject(err);
       }
     };
 
