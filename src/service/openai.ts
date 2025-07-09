@@ -77,7 +77,7 @@ async function checkRunStatus({
 }): Promise<any> {
   return await new Promise((resolve, reject) => {
     const startTime = Date.now();
-    const TIMEOUT_LIMIT = 15000; // 15 segundos
+    const TIMEOUT_LIMIT = 5000; // 15 segundos
 
     const verify = async (): Promise<void> => {
       const elapsed = Date.now() - startTime;
