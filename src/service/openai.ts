@@ -52,12 +52,11 @@ export async function mainOpenAI({
     content: currentMessage,
   });
 
-  const run = await openai.beta.threads.runs.create(thread.id, {
-    assistant_id: assistant.id,
-    instructions: assistant.instructions,
-  });
+  const executedRun = await openai.beta.threads.runs.create(thread.id, {
+  assistant_id: assistant.id,
+});
 
-  const messages = await checkRunStatus({ threadId: thread.id, runId: run.id });
+  const messages = await checkRunStatus({ threadId: thread.id, runId: executedRun.id });
   const content = messages.data[0]?.content[0];
 
   if (content?.type === 'text') {
