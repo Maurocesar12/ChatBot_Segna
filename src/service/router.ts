@@ -6,7 +6,7 @@ dotenv.config();
 const setores: Record<string, string> = {
   'cancelamento': 'dep_01',
   'boleto': 'dep_02',
-  'suporte': 'dep_03',
+  'direcionando para um atendente': 'dep_03',
   'vendas': 'dep_04'
 };
 
@@ -42,7 +42,7 @@ async function buscarContactIdPorNumero(numero: string): Promise<string | null> 
   }
 }
 
-async function criarConversaTemporaria(numero: string, texto: string): Promise<boolean> {
+async function criarConversaTemporaria(numero: string, texto: string, nomeContato: string, p0: string): Promise<boolean> {
   const baseUrl = process.env.DIGISAC_URL;
   const token = process.env.DIGISAC_TOKEN;
   const serviceId = process.env.DIGISAC_CONNECTION_ID;
@@ -57,7 +57,8 @@ async function criarConversaTemporaria(numero: string, texto: string): Promise<b
       number: numero,
       userId,
       origin: "user",
-      departmentId: departamentoId
+      departmentId: departamentoId,
+      name: nomeContato,
     };
 
     const response = await axios.post(`${baseUrl}/messages`, payload, {
@@ -75,12 +76,12 @@ async function criarConversaTemporaria(numero: string, texto: string): Promise<b
   }
 }
 
-export async function transferirParaSetor(numero: string, departmentId: string, comentario: string): Promise<boolean> {
+export async function transferirParaSetor(numero: string, departmentId: string, comentario: string, nomeContato: string): Promise<boolean> {
   let contactId = await buscarContactIdPorNumero(numero);
 
   if (!contactId) {
     console.warn("⚠️ Contato ainda não existe. Tentando criar conversa...");
-    const criado = await criarConversaTemporaria(numero, comentario || "Iniciando atendimento automático");
+    const criado = await criarConversaTemporaria(numero, comentario, nomeContato || "Iniciando atendimento automático", "");
     if (!criado) return false;
 
     // Espera breve para API atualizar contato

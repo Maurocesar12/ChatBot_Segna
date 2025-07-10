@@ -74,13 +74,18 @@ async function start(client: wppconnect.Whatsapp): Promise<void> {
           return;
         };
 
-        // NOVO: Verificar e transferir para setor no Digisac
+        // NOVO: Verificar e transferir para setor no Digisac, adicione o nome do contato
+        // se necessário para o Digisac
         const departmentId = detectarSetor(message.body);
         if (departmentId) {
-          await transferirParaSetor(chatId, departmentId, message.body);
+          const contato = await client.getContact(message.from);
+          const nomeContato = (contato.pushname ?? (contato.name) ?? message.notifyName) || "Sem Nome";
+
+          await transferirParaSetor(chatId, departmentId, message.body, nomeContato);
           console.log(`🔁 Mensagem direcionada ao setor ${departmentId} via Digisac.`);
           return;
-      }
+        }
+
 
 
         console.log('Mensagem recebida:', message.body);
