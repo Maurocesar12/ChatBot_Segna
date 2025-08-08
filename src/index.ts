@@ -43,7 +43,7 @@ wppconnect
       console.log('Session name: ', session);
     },
     headless: true,
-    executablePath: '/usr/bin/chromium-browser'
+    executablePath: '/snap/bin/chromium'
   })
   .then((client) => {
     start(client);
