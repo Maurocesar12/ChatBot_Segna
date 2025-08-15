@@ -8,12 +8,13 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsup src",
     "start": "npm run build && npx pm2 start dist/index.cjs --name zap-gpt --no-daemon",
-    "stop": "npx pm2 delete zap-gpt"
+    "stop": "npx pm2 delete zap-gpt",
+    "clean": "rimraf node_modules dist package-lock.json"
   },
   "keywords": [],
   "author": {
-    "name": "Marcus Gonçalves",
-    "email": "marcusgoncalves067@gmail.com"
+    "name": "Mauro Guimarães",
+    "email": "mauroguima080@hotmail.com"
   },
   "license": "MIT",
   "type": "module",

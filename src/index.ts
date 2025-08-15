@@ -43,7 +43,9 @@ wppconnect
       console.log('Session name: ', session);
     },
     headless: true,
-    executablePath: '/snap/bin/chromium'
+    puppeteerOptions: {
+      executablePath: '/snap/bin/chromium'
+    }
   })
   .then((client) => {
     start(client);
