@@ -88,10 +88,8 @@ async function start(client: wppconnect.Whatsapp): Promise<void> {
           console.log(`🔁 Mensagem direcionada ao setor ${departmentId} via Digisac.`);
           return;
         }
-
-
-
         console.log('Mensagem recebida:', message.body);
+        
         // 🔎 Tratamento de CPF ou CNPJ antes da IA
         const documento = message.body.trim().replace(/\D/g, '');
 
